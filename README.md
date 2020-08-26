@@ -4,4 +4,4 @@ Web application for conducting online polls and surveys.
 
 ## Project Documents
 
-[Vision Statement](../../wiki/Vision Statement)
+[Vision Statement](wiki/Vision Statement)
