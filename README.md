@@ -6,3 +6,5 @@ Web application for conducting online polls and surveys.
 
 [Vision Statement](https://github.com/markna551/ku-polls/wiki/Vision-Statement)
 
+[Requirements](https://github.com/markna551/ku-polls/wiki/Requirements)
+
