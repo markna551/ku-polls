@@ -4,14 +4,15 @@ from django.test import TestCase
 from django.utils import timezone
 from .models import Question
 
-def create_question(question_text, days):
+def create_question(question_text, days, end_days = 0):
     """
     Create a question with the given `question_text` and published the
     given number of `days` offset to now (negative for questions published
     in the past, positive for questions that have yet to be published).
     """
     time = timezone.now() + datetime.timedelta(days=days)
-    return Question.objects.create(question_text=question_text, pub_date=time)
+    end_time = timezone.now() + datetime.timedelta(days=end_days)
+    return Question.objects.create(question_text=question_text, pub_date=time , end_date=end_time)
 
 class QuestionIndexViewTests(TestCase):
 
@@ -117,3 +118,40 @@ class QuestionDetailViewTests(TestCase):
         url = reverse('polls:detail',args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
+
+class QuestionCanVoteTest(TestCase):
+
+    def test_can_vote_question(self):
+        pubtime = timezone.now() - datetime.timedelta(days=1, seconds=1)
+        endtime = timezone.now() + datetime.timedelta(days=1, seconds=1)
+        canvote_question = Question(pub_date=pubtime ,end_date=endtime)
+        self.assertIs(canvote_question.can_vote(), True)
+
+    def test_can_vote_future_question(self):
+        pubtime = timezone.now() + datetime.timedelta(days=3, seconds=1)
+        endtime = timezone.now() + datetime.timedelta(days=1, seconds=1)
+        canvote_question = Question(pub_date=pubtime ,end_date=endtime)
+        self.assertIs(canvote_question.can_vote(), False)
+
+    def test_can_vote_ended_question(self):
+        pubtime = timezone.now() - datetime.timedelta(days=1, seconds=1)
+        endtime = timezone.now() - datetime.timedelta(seconds=1)
+        canvote_question = Question(pub_date=pubtime, end_date=endtime)
+        self.assertIs(canvote_question.can_vote(), False)
+
+class QuestionIsPublishedTest(TestCase):
+
+    def test_is_published_question(self):
+        pubtime = timezone.now() - datetime.timedelta(days=1, seconds=1)
+        published_question = Question(pub_date=pubtime)
+        self.assertIs(published_question.is_published(), True)
+
+    def test_is_published_future_question(self):
+        pubtime = timezone.now() + datetime.timedelta(days=1, seconds=1)
+        published_question = Question(pub_date=pubtime)
+        self.assertIs(published_question.is_published(), False)
+
+
+
+
+

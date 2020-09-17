@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-
+from django.contrib import  messages
 from .models import Choice, Question
 
 class IndexView(generic.ListView):
@@ -42,6 +42,9 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })
     else:
+        if not (question.can_vote()):
+            messages.warning(request,"This question is expired.")
+            return HttpResponseRedirect(reverse('polls:index'))
         selected_choice.votes += 1
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))

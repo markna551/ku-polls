@@ -1,11 +1,22 @@
 {% load static %}
-
+  {% if messages %}
+  {% for msg in messages %}
+    <p class="{{msg.tags}}">{{ msg }}</p>
+  {% endfor %}
+  {% endif %}
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
 
 {% if latest_question_list %}
+    {% if messages %}
+{% endif %}
     <ul>
     {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+        <li><b> {{question.question_text}} </b>
+        {% if question.can_vote%}
+            <a href="{% url 'polls:detail' question.id %}">{{ "vote" }}</a>
+        {% endif %}
+            <a href="{% url 'polls:results' question.id %}">{{ "result" }}</a></li>
+
     {% endfor %}
     </ul>
 {% else %}

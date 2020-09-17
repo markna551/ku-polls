@@ -5,6 +5,12 @@
     <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}
     </li>
 {% endfor %}
-</ul>
+    {% if question.can_vote %}
+    <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+    <a href="{% url 'polls:index'%}">main page</a>
 
-<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+    {% else %}
+    <a href="{% url 'polls:index'%}">main page</a>
+
+    {% endif %}
+</ul>
