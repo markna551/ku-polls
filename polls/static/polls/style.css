@@ -3,4 +3,7 @@ li a {
 }
 body {
     background: white url("images/background.gif") no-repeat;
+    background-position: center;
+    background-size:cover
+
 }

@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -16,7 +16,7 @@ class IndexView(generic.ListView):
         """
         return Question.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:5]
+        ).order_by('-pub_date')
 
 class DetailView(generic.DetailView):
     model = Question
@@ -27,6 +27,16 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+
+def vote_for_poll(request, pk):
+    try:
+        question = Question.objects.get(pk = pk)
+    except:
+        return HttpResponseRedirect(reverse('polls:index'))
+    if not (question.can_vote()):
+        messages.warning(request, "This question is expired.")
+        return HttpResponseRedirect(reverse('polls:index'))
+    return render(request, 'polls/detail.html', {"question": question})
 
 class ResultsView(generic.DetailView):
     model = Question
