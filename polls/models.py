@@ -1,24 +1,32 @@
+"""Create Question and Choice to use in ku-polls."""
 import datetime
 from django.db import models
 from django.utils import timezone
 
 
 class Question(models.Model):
+    """Create question in ku-polls."""
+
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     end_date = models.DateTimeField('date ended')
+
     def __str__(self):
+        """Return question text."""
         return self.question_text
 
     def was_published_recently(self):
+        """Use to check this polls is published recently."""
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
     def is_published(self):
+        """Use to check this polls is published."""
         now = timezone.now()
         return now >= self.pub_date
 
     def can_vote(self):
+        """Use to check this polls can vote or not."""
         now = timezone.now()
         return self.pub_date <= now <= self.end_date
 
@@ -28,8 +36,12 @@ class Question(models.Model):
 
 
 class Choice(models.Model):
+    """Create choice in ku-polls."""
+
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+
     def __str__(self):
+        """Return choice text."""
         return self.choice_text
