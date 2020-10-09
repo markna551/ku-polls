@@ -6,4 +6,4 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - py manage.py test polls
+  - python manage.py test polls
