@@ -1,3 +1,4 @@
 Django
 django-environ
 python-decouple
+coverage
