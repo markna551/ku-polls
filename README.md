@@ -11,3 +11,5 @@ Web application for conducting online polls and surveys.
 [Requirements](https://github.com/markna551/ku-polls/wiki/Requirements)
 
 [Iteration 1 Plan](https://github.com/markna551/ku-polls/wiki/Iteration-1-Plan)
+
+[Iteration 2 Plan](https://github.com/markna551/ku-polls/wiki/Iteration-2-Plan)
