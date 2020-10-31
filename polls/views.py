@@ -42,7 +42,7 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
-@login_required(login_url='/accounts/login/')
+@login_required()
 def vote(request, question_id):
     """Redirect to vote page."""
     user = request.user
@@ -58,7 +58,10 @@ def vote(request, question_id):
         if not (question.can_vote()):
             messages.warning(request, "This question is expired.")
             return HttpResponseRedirect(reverse('polls:index'))
-        selected_choice.votes += 1
-        selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:results',
-                                            args=(question.id,)))
+        if question.vote_set.filter(user=user).exists():
+            vote = question.vote_set.get(user=user)
+            vote.choice = selected_choice
+            vote.save()
+        else:
+            selected_choice.vote_set.create(user=user, question=question)
+        return HttpResponseRedirect(reverse('polls:results', args=(question_id,)))

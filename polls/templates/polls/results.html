@@ -10,7 +10,7 @@
         {% endfor %}
     </table>
     {% if question.can_vote %}
-    <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+    <a href="{% url 'polls:detail' question.id %}">Vote</a>
     <a href="{% url 'polls:index' %}">main page</a>
 
     {% else %}
